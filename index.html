@@ -19,24 +19,23 @@
                 <div>Library</div>
             </div>
             <form action="">
-                <input type="text" name="title" id="title" placeholder="What is the title of the book?">
-                <input type="text" name="author" id="author" placeholder="Who is the author of the book?">
-                <input type="text" name="pages" id="pages" placeholder="How many pages are in the book?">
-                <input type="text" name="read" id="read" placeholder="Have you read this book?  (Yes / No)">
+                <input required type="text" name ="title" id="title" placeholder="What is the title of the book?">
+                <input required type="text" name ="author" id="author" placeholder="Who is the author of the book?">
+                <input required type="number" name ="pages" id="pages" placeholder="How many pages are in the book?">
+                <input required type="text" name ="read" id="read" placeholder="Have you read this book?  (Yes / No)">
                 <button type="submit">ADD A NEW BOOK</button>
             </form>
         </div>
         <div class="content">
-
+            <div class="head">
+                <p class="read-count"></p>
+                <p class="unread-count"></p>
+                <p class="total-count"></p>
+                <button class="del-btn">DELETE ALL</button>
+            </div>
+            <div class="display"></div>
         </div>
     </div>
-
-
-
-
-
-
-
     <script src="./script.js"></script>
 </body>
 </html>
