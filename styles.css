@@ -136,7 +136,7 @@ form button:hover {
     min-width: 260px;
     min-height: 300px;
     text-transform: uppercase;
-    font-family: var(--headfont);
+    font-family: var(--bodyfont);
     letter-spacing: 1px;
 }
 
