@@ -113,18 +113,8 @@ form button:hover {
     color: #b63030;
     background: none;
 }
-/* 
-.display {
-    justify-self: baseline;
-    display: grid;
-    grid-template-columns: repeat(autofill, minmax(250px, 1fr));
-    align-items: start;
-    column-gap: 1em;
-    row-gap: 1em;
-} */
 
 .display {
-    /* justify-self: start; */
     display: flex;
     align-items: start;
     justify-content: center;
@@ -148,6 +138,19 @@ form button:hover {
     min-height: 300px;
 }
 
+.card svg {
+    width: 25px;
+    height: 25px;
+    fill: white;
+    stroke: #fb6868;
+    align-self: flex-end;
+    z-index: 5;
+}
+
+.card svg:hover {
+    transform: rotate(360deg);
+}
+ 
 .card:hover {
     cursor: pointer;
     transform: scale(1.05);

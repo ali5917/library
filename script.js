@@ -37,7 +37,7 @@ function displayLibrary() {
     const displayDiv = document.querySelector('.display');
     displayDiv.innerHTML = " ";
 
-    myLibrary.forEach(book => {
+    myLibrary.forEach((book, index) => {
         const cardDiv = document.createElement('div');
         cardDiv.classList.add('card');
         
@@ -54,10 +54,18 @@ function displayLibrary() {
             bookRead.textContent = "Status: Unread"
         }
 
+        const deleteIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        deleteIcon.setAttribute('viewBox', '0 0 24 24');
+        deleteIcon.innerHTML = '<title>delete</title><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />';
+        console.log(index);
+        deleteIcon.setAttribute('data-index', index);
+        deleteIcon.addEventListener('click', deleteBook);
+
         cardDiv.appendChild(bookName);
         cardDiv.appendChild(bookAuthor);
         cardDiv.appendChild(bookPages);
         cardDiv.appendChild(bookRead);
+        cardDiv.appendChild(deleteIcon);
 
         displayDiv.appendChild(cardDiv);
     })
@@ -102,3 +110,20 @@ document.querySelector('.del-btn').addEventListener('click', () => {
 
     displayLibrary();
 })
+
+function deleteBook(event) {
+    const index = parseInt(event.currentTarget.getAttribute('data-index'));
+    console.log(index);
+    if (myLibrary[index].read.toLowerCase() === 'yes') {
+        readCount --;
+    } else {
+        unreadCount --;
+    }
+    booksCount --;
+    document.querySelector('.read-count').textContent = `BOOKS READ: ${readCount}`;
+    document.querySelector('.unread-count').textContent = `BOOKS UNREAD: ${unreadCount}`;
+    document.querySelector('.total-count').textContent = `TOTAL BOOKS: ${booksCount}`;
+    
+    myLibrary.splice(index, 1);
+    displayLibrary();
+}
