@@ -1,25 +1,67 @@
-const myLibrary = [];
-let booksCount = 0;
-let readCount = 0;
-let unreadCount = 0;
-document.querySelector('.read-count').textContent = `BOOKS READ: ${readCount}`;
-document.querySelector('.unread-count').textContent = `BOOKS UNREAD: ${unreadCount}`;
-document.querySelector('.total-count').textContent = `TOTAL BOOKS: ${booksCount}`;
-
-function Book (name, author, pages, read) {
-    this.name = name;
-    this.author = author;
-    this.pages = pages;
-    this.read = read; 
+class Book {
+    constructor(name, author, pages, read) {
+        this.name = name;
+        this.author = author;
+        this.pages = pages;
+        this.read = read; 
+    }
 }
 
-function addBookToLibrary(title, author, pages, read) {
-    const newBook = new Book(title, author, pages, read);
-    myLibrary.push(newBook);
+class Library {
+    #booksList = [];
+
+    constructor() {
+        this.booksCount = 0;
+        this.readCount = 0;
+        this.unreadCount = 0;
+    }
+
+    addBook = (book) => {
+        this.#booksList.push(book);
+        if (book.read.toLowerCase() === 'yes') {
+            this.readCount++;
+        } else {
+            this.unreadCount++;
+        }
+        this.booksCount++;
+    }
+
+    removeBook = (index) => {
+        if (index >= 0 && index < this.#booksList.length) {
+            const book = this.#booksList[index];
+            if (book.read.toLowerCase() === 'yes') {
+                this.readCount--;
+            } else {
+                this.unreadCount--;
+            }
+            this.booksCount--;
+            this.#booksList.splice(index, 1);
+        }
+    }
+
+    get books () {
+        return this.#booksList;
+    }
+
+    clearBooks = () => {
+        this.#booksList = [];
+        this.booksCount = 0;
+        this.readCount = 0;
+        this.unreadCount = 0;
+    }
 }
+
+function updateCounts () {
+    document.querySelector('.read-count').textContent = `BOOKS READ: ${myLibrary.readCount}`;
+    document.querySelector('.unread-count').textContent = `BOOKS UNREAD: ${myLibrary.unreadCount}`;
+    document.querySelector('.total-count').textContent = `TOTAL BOOKS: ${myLibrary.booksCount}`;
+}
+
+const myLibrary = new Library();
+updateCounts();
 
 // Validating Inputs 
-function validateInputs(title, author, pages, read) {
+function validateInputs(pages, read) {
     if (isNaN(pages) || pages < 0) {
         alert("Please enter a valid number of pages!");
         return false;
@@ -37,7 +79,7 @@ function displayLibrary() {
     const displayDiv = document.querySelector('.display');
     displayDiv.innerHTML = " ";
 
-    myLibrary.forEach((book, index) => {
+    myLibrary.books.forEach((book, index) => {
         const cardDiv = document.createElement('div');
         cardDiv.classList.add('card');
         
@@ -68,7 +110,6 @@ function displayLibrary() {
 
         displayDiv.appendChild(cardDiv);
     })
-
 }
 
 // handling form submission
@@ -81,47 +122,27 @@ form.addEventListener('submit', (e) => {
     const pages = document.getElementById('pages').value.trim();
     const read = document.getElementById('read').value.trim();
 
-    if (validateInputs(title, author, pages, read)) {
+    if (validateInputs(pages, read)) {
         form.reset();
-        addBookToLibrary(title, author, pages, read);
+        const newBook = new Book(title, author, pages, read);
+        myLibrary.addBook(newBook);
         displayLibrary();
-        if (read.toLowerCase() == 'yes') {
-            readCount ++;
-        } else {
-            unreadCount ++;
-        }
-        booksCount ++;
-
-        document.querySelector('.read-count').textContent = `BOOKS READ: ${readCount}`;
-        document.querySelector('.unread-count').textContent = `BOOKS UNREAD: ${unreadCount}`;
-        document.querySelector('.total-count').textContent = `TOTAL BOOKS: ${booksCount}`;
+        updateCounts();
     }
 })
 
 document.querySelector('.del-btn').addEventListener('click', () => {
-    myLibrary.splice(0, myLibrary.length);
-    booksCount = 0;
-    readCount = 0;
-    unreadCount = 0;
-    document.querySelector('.read-count').textContent = `BOOKS READ: ${readCount}`;
-    document.querySelector('.unread-count').textContent = `BOOKS UNREAD: ${unreadCount}`;
-    document.querySelector('.total-count').textContent = `TOTAL BOOKS: ${booksCount}`;
-
-    displayLibrary();
+    const confirmed = confirm("Are you sure you want to delete ALL books?");
+    if (confirmed) {
+        myLibrary.clearBooks();
+        updateCounts();
+        displayLibrary();
+    }
 })
 
 function deleteBook(event) {
     const index = parseInt(event.currentTarget.getAttribute('data-index'));
-    if (myLibrary[index].read.toLowerCase() === 'yes') {
-        readCount --;
-    } else {
-        unreadCount --;
-    }
-    booksCount --;
-    document.querySelector('.read-count').textContent = `BOOKS READ: ${readCount}`;
-    document.querySelector('.unread-count').textContent = `BOOKS UNREAD: ${unreadCount}`;
-    document.querySelector('.total-count').textContent = `TOTAL BOOKS: ${booksCount}`;
-    
-    myLibrary.splice(index, 1);
+    myLibrary.removeBook(index);
+    updateCounts();
     displayLibrary();
 }
